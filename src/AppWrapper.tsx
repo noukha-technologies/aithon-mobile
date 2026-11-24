@@ -3,6 +3,8 @@ import { Provider } from 'react-redux';
 import { store, persistor } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '@config/toast.config';
 import { useAppDispatch } from './redux/hooks';
@@ -28,16 +30,20 @@ const LoadingView = () => (
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Provider store={store}>
-      <PersistGate loading={<LoadingView />} persistor={persistor}>
-        <SafeAreaProvider>
-          <AppContent>
-            {children}
-          </AppContent>
-          <NetworkBanner />
-          <Toast config={toastConfig} />
-        </SafeAreaProvider>
-      </PersistGate>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <PersistGate loading={<LoadingView />} persistor={persistor}>
+          <SafeAreaProvider>
+            <BottomSheetModalProvider>
+              <AppContent>
+                {children}
+              </AppContent>
+              <NetworkBanner />
+              <Toast config={toastConfig} />
+            </BottomSheetModalProvider>
+          </SafeAreaProvider>
+        </PersistGate>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
